@@ -1,14 +1,19 @@
 {
+  "version": 2,
   "buildCommand": "npm run build:web",
   "outputDirectory": "web/dist",
   "installCommand": "npm install",
   "framework": null,
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/[...route].ts"
+    },
+    {
       "handle": "filesystem"
     },
     {
-      "src": "/.*",
+      "src": "/(.*)",
       "dest": "/index.html"
     }
   ]
