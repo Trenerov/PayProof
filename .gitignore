@@ -1,0 +1,12 @@
+node_modules
+dist
+.vite
+*.tsbuildinfo
+server/data
+web/dist
+.env
+.DS_Store
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+.npm-cache

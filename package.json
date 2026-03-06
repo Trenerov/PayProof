@@ -1,0 +1,16 @@
+{
+  "name": "payproof",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "build": "npm run build -w server && npm run build -w web",
+    "build:web": "npm run build -w web",
+    "lint": "npm run lint -w server && npm run lint -w web",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web"
+  }
+}

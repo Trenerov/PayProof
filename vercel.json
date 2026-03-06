@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build:web",
+  "outputDirectory": "web/dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}
