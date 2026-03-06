@@ -1,11 +1,14 @@
 import { config } from "./config.js";
 import { app } from "./app.js";
-import { chainAdapter } from "./services/opnetClient.js";
+import { getChainAdapter } from "./services/opnetClient.js";
 import { createInvoiceWatcher } from "./workers/invoiceWatcher.js";
 
-const watcher = createInvoiceWatcher(chainAdapter, config.watcherIntervalMs);
 if (!config.isVercel) {
-  watcher.start();
+  void (async () => {
+    const chainAdapter = await getChainAdapter();
+    const watcher = createInvoiceWatcher(chainAdapter, config.watcherIntervalMs);
+    watcher.start();
+  })();
 }
 
 app.listen(config.port, () => {

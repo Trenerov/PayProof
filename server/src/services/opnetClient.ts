@@ -1,14 +1,27 @@
-import { networks } from "@btc-vision/bitcoin";
-import { JSONRpcProvider } from "opnet";
-import { OpNetChainAdapter } from "../chain/opnetAdapter.js";
 import { config } from "../config.js";
 
-const network =
-  config.opnetNetwork === "mainnet"
-    ? networks.bitcoin
-    : config.opnetNetwork === "regtest"
-      ? networks.regtest
-      : networks.testnet;
+let chainAdapterPromise: Promise<import("../chain/opnetAdapter.js").OpNetChainAdapter> | null = null;
 
-export const opnetProvider = new JSONRpcProvider(config.opnetRpcUrl, network);
-export const chainAdapter = new OpNetChainAdapter(opnetProvider);
+export const getChainAdapter = async () => {
+  if (!chainAdapterPromise) {
+    chainAdapterPromise = (async () => {
+      const [{ networks }, { JSONRpcProvider }, { OpNetChainAdapter }] = await Promise.all([
+        import("@btc-vision/bitcoin"),
+        import("opnet"),
+        import("../chain/opnetAdapter.js")
+      ]);
+
+      const network =
+        config.opnetNetwork === "mainnet"
+          ? networks.bitcoin
+          : config.opnetNetwork === "regtest"
+            ? networks.regtest
+            : networks.testnet;
+
+      const provider = new JSONRpcProvider(config.opnetRpcUrl, network);
+      return new OpNetChainAdapter(provider);
+    })();
+  }
+
+  return chainAdapterPromise;
+};

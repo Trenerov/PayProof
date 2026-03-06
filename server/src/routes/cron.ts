@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { chainAdapter } from "../services/opnetClient.js";
+import { getChainAdapter } from "../services/opnetClient.js";
 import { runWatcherOnce } from "../workers/invoiceWatcher.js";
 
 export const cronRouter = Router();
 
 cronRouter.post("/watch", async (_request, response) => {
   try {
+    const chainAdapter = await getChainAdapter();
     await runWatcherOnce(chainAdapter);
     response.json({ ok: true });
   } catch (error) {

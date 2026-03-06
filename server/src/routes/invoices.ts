@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { ZodError } from "zod";
 import { invoiceService } from "../services/invoiceService.js";
-import { chainAdapter } from "../services/opnetClient.js";
+import { getChainAdapter } from "../services/opnetClient.js";
 
 export const invoicesRouter = Router();
 
 invoicesRouter.post("/", async (request, response) => {
   try {
+    const chainAdapter = await getChainAdapter();
     const currentBlockNumber = await chainAdapter.getCurrentBlockNumber();
     const invoice = await invoiceService.createInvoice(request.body, currentBlockNumber);
     response.status(201).json(invoice);
@@ -37,6 +38,7 @@ invoicesRouter.get("/:id", (request, response) => {
     }
 
     if (existingInvoice.status === "UNPAID" || existingInvoice.status === "PENDING") {
+      const chainAdapter = await getChainAdapter();
       const txs = await chainAdapter.getTxsByAddress(
         existingInvoice.recipientAddress,
         existingInvoice.createdAtBlockHeight ?? 0
