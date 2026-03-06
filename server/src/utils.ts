@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { networks, type Network } from "@btc-vision/bitcoin";
-import { AddressTypes, AddressVerificator } from "@btc-vision/transaction";
+import { AddressVerificator } from "@btc-vision/transaction";
 import { config } from "./config.js";
 
 export const SATS_PER_BTC = 100_000_000n;
@@ -58,7 +58,8 @@ export const getOpNetNetwork = (): Network => {
 };
 
 export const isLikelyOpNetAddress = (address: string) =>
-  AddressVerificator.detectAddressType(address.trim(), getOpNetNetwork()) === AddressTypes.P2OP;
+  AddressVerificator.isValidP2TRAddress(address.trim(), getOpNetNetwork()) ||
+  AddressVerificator.isValidP2OPAddress(address.trim(), getOpNetNetwork());
 
 export const safeExplorerTxUrl = (txId: string | null) => {
   if (!txId) {
